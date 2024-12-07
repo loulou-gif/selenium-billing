@@ -14,6 +14,7 @@ public class Billing {
 
     private WebDriver driver;
     private WebDriverWait wait;
+    
 
     public void setup() {
         System.setProperty("webdriver.chrome.driver", "/Users/FRAFA-PC/automation/selenium-billing/driver/chromedriver");
