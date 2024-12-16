@@ -1,0 +1,34 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Selenium Test Suite">
+
+    <!-- Première suite : Login Test -->
+   <test name="Login Test 1">
+        <parameter name="username" value="standard_user"/>
+        <parameter name="password" value="secret_sauce"/>
+        
+        <classes>
+            <class name="com.example.LoginClass">
+                <methods>
+                    <include name="login"/> 
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Billing test">
+        <parameter name="username" value="standard_user"/>
+        <parameter name="password" value="secret_sauce"/>
+        <parameter name="name" value="Julius"/>
+        <parameter name="surname" value="seth kadmiel"/>
+        <parameter name="postalCode" value="ABATTA 220 Log"/>
+        <classes>
+            <class name="com.example.Billing">
+                <methods>
+                    <include name="login"/>
+                    <include name="addToBasket"/>
+                    <include name="validBasket"/>
+                    <include name="logout"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

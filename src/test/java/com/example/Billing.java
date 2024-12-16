@@ -9,19 +9,24 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
 public class Billing {
 
     private WebDriver driver;
     private WebDriverWait wait;
     
-
+    @BeforeClass
     public void setup() {
-        System.setProperty("webdriver.chrome.driver", "/Users/FRAFA-PC/automation/selenium-billing/driver/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "driver/chromedriver");
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        driver.manage().window().maximize();
     }
-
+    @Test
+    @Parameters({"username", "password"})
     public void login(String username, String password) {
         driver.get("https://www.saucedemo.com/");
         WebElement usrInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#user-name")));
@@ -31,7 +36,7 @@ public class Billing {
         pwdInput.sendKeys(password);
         pwdInput.sendKeys(Keys.RETURN);
     }
-
+    @Test
     public void addToBasket() {
         WebElement addBtn = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#add-to-cart-sauce-labs-backpack")));
         WebElement basketBtn = driver.findElement(By.cssSelector("#shopping_cart_container > a"));
@@ -39,33 +44,35 @@ public class Billing {
         addBtn.click();
         basketBtn.click();
     }
-
-    public void validBasket() {
+    @Test
+    @Parameters({"name","surname","postalCode"})
+    public void validBasket(String name, String surname, String postalCode) {
         try {
-            WebElement validBtn = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#checkout")));
+            Thread.sleep(2000);
+            WebElement validBtn = driver.findElement(By.cssSelector("#checkout"));
             validBtn.click();
 
-            WebElement firstInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#first-name")));
+            WebElement firstInput = driver.findElement(By.cssSelector("#first-name"));
             WebElement secondInput = driver.findElement(By.cssSelector("#last-name"));
             WebElement postalInput = driver.findElement(By.cssSelector("#postal-code"));
 
-            firstInput.sendKeys("Julius");
-            secondInput.sendKeys("Konan");
-            postalInput.sendKeys("12345");
+            firstInput.sendKeys(name);
+            secondInput.sendKeys(surname);
+            postalInput.sendKeys(postalCode);
 
             WebElement validBtn2 = driver.findElement(By.cssSelector("#continue"));
             validBtn2.click();
 
-            WebElement endBtn = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#finish")));
+            WebElement endBtn = driver.findElement(By.cssSelector("#finish"));
             endBtn.click();
 
-            WebElement goHome = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#back-to-products")));
+            WebElement goHome = driver.findElement(By.cssSelector("#back-to-products"));
             goHome.click();
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
             System.err.println("Error during basket validation: " + e.getMessage());
         }
     }
-
+    @Test
     public void logout() {
         try {
             WebElement menuIcon = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#react-burger-menu-btn")));
@@ -77,7 +84,7 @@ public class Billing {
             System.err.println("Error during logout: " + e.getMessage());
         }
     }
-
+    @AfterClass
     public void teardown() {
         if (driver != null) {
             driver.quit();
@@ -85,16 +92,16 @@ public class Billing {
     }
 
     // Main method to execute the test
-    public static void main(String[] args) {
-        Billing test = new Billing();
-        try {
-            test.setup();
-            test.login("standard_user", "secret_sauce");
-            test.addToBasket();
-            test.validBasket();
-            test.logout();
-        } finally {
-            test.teardown();
-        }
-    }
+    // public static void main(String[] args) {
+    //     Billing test = new Billing();
+    //     try {
+    //         test.setup();
+    //         test.login("standard_user", "secret_sauce");
+    //         test.addToBasket();
+    //         test.validBasket();
+    //         test.logout();
+    //     } finally {
+    //         test.teardown();
+    //     }
+    // }
 }
